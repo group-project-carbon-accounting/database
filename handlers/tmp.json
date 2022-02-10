@@ -1,0 +1,19 @@
+{
+    "buyr_id": 4,
+    "selr_id": 6,
+    "amount": 123,
+    "item_list": [
+        {
+            "prod_id": 1,
+            "comp_id": 6
+        },
+        {
+            "prod_id": 3,
+            "comp_id": 6
+        },
+        {
+            "prod_id": 4,
+            "comp_id": 6
+        }
+    ]
+}

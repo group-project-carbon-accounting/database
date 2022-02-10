@@ -1,0 +1,130 @@
+Uncaught exception POST /transaction/update (127.0.0.1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='POST', uri='/transaction/update', version='HTTP/1.1', remote_ip='127.0.0.1')
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 1702, in _execute
+    result = method(*self.path_args, **self.path_kwargs)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/handlers/update_transaction_info.py", line 10, in post
+    print(json.loads(data))
+  File "/home/ivin/.pyenv/versions/3.9.7/lib/python3.9/json/__init__.py", line 339, in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+TypeError: the JSON object must be str, bytes or bytearray, not dict
+Uncaught exception
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/http1connection.py", line 273, in _read_message
+    delegate.finish()
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/routing.py", line 268, in finish
+    self.delegate.finish()
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 2290, in finish
+    self.execute()
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 2309, in execute
+    self.handler = self.handler_class(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 233, in __init__
+    self.initialize(**kwargs)  # type: ignore
+TypeError: _initialize() got an unexpected keyword argument 'db'
+Uncaught exception
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/http1connection.py", line 273, in _read_message
+    delegate.finish()
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/routing.py", line 268, in finish
+    self.delegate.finish()
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 2290, in finish
+    self.execute()
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 2309, in execute
+    self.handler = self.handler_class(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 233, in __init__
+    self.initialize(**kwargs)  # type: ignore
+TypeError: _initialize() got an unexpected keyword argument 'db'
+Uncaught exception POST /transaction/add (127.0.0.1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='POST', uri='/transaction/add', version='HTTP/1.1', remote_ip='127.0.0.1')
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 1702, in _execute
+    result = method(*self.path_args, **self.path_kwargs)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/handlers/transaction_info.py", line 11, in post
+    self.write(data["buyr_id"])
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 841, in write
+    raise TypeError(message)
+TypeError: write() only accepts bytes, unicode, and dict objects
+Uncaught exception POST /transaction/add (127.0.0.1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='POST', uri='/transaction/add', version='HTTP/1.1', remote_ip='127.0.0.1')
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 1702, in _execute
+    result = method(*self.path_args, **self.path_kwargs)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/handlers/transaction_info.py", line 15, in post
+    if data['item_list'] is None:
+KeyError: 'item_list'
+Uncaught exception POST /transaction/add (127.0.0.1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='POST', uri='/transaction/add', version='HTTP/1.1', remote_ip='127.0.0.1')
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 1702, in _execute
+    result = method(*self.path_args, **self.path_kwargs)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/handlers/transaction_info.py", line 18, in post
+    .values(buyr_id=data['buyr_id'], selr_id=data['selr_id'], price=data['amount'], carbon_cost=0)
+KeyError: 'buyr_id'
+Uncaught exception POST /transaction/add (127.0.0.1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='POST', uri='/transaction/add', version='HTTP/1.1', remote_ip='127.0.0.1')
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 1702, in _execute
+    result = method(*self.path_args, **self.path_kwargs)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/handlers/transaction_info.py", line 18, in post
+    .values(buyr_id=data['buyr_id'], selr_id=data['selr_id'], price=data['amount'], carbon_cost=0)
+KeyError: 'amount'
+Uncaught exception POST /transaction/add (127.0.0.1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='POST', uri='/transaction/add', version='HTTP/1.1', remote_ip='127.0.0.1')
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 1702, in _execute
+    result = method(*self.path_args, **self.path_kwargs)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/handlers/transaction_info.py", line 21, in post
+    self.write(result.inserted_primary_key)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 841, in write
+    raise TypeError(message)
+TypeError: write() only accepts bytes, unicode, and dict objects
+Uncaught exception POST /transaction/add (127.0.0.1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='POST', uri='/transaction/add', version='HTTP/1.1', remote_ip='127.0.0.1')
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 1702, in _execute
+    result = method(*self.path_args, **self.path_kwargs)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/handlers/transaction_info.py", line 25, in post
+    result['data']=dict(trns_id=result.inserted_primary_key[0])
+TypeError: 'CursorResult' object does not support item assignment
+Uncaught exception POST /transaction/add (127.0.0.1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='POST', uri='/transaction/add', version='HTTP/1.1', remote_ip='127.0.0.1')
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1782, in _execute_context
+    self.dialect.do_executemany(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py", line 951, in do_executemany
+    context._psycopg2_fetched_rows = xtras.execute_values(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/psycopg2/extras.py", line 1267, in execute_values
+    parts.append(cur.mogrify(template, args))
+psycopg2.ProgrammingError: can't adapt type 'dict'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/tornado/web.py", line 1702, in _execute
+    result = method(*self.path_args, **self.path_kwargs)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/handlers/transaction_info.py", line 39, in post
+    conn.execute(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/future/engine.py", line 280, in execute
+    return self._execute_20(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1614, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 325, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1481, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1845, in _execute_context
+    self._handle_dbapi_exception(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 2026, in _handle_dbapi_exception
+    util.raise_(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1782, in _execute_context
+    self.dialect.do_executemany(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py", line 951, in do_executemany
+    context._psycopg2_fetched_rows = xtras.execute_values(
+  File "/home/ivin/PycharmProjects/alpha-carbon-accounting-database/venv/lib/python3.9/site-packages/psycopg2/extras.py", line 1267, in execute_values
+    parts.append(cur.mogrify(template, args))
+sqlalchemy.exc.ProgrammingError: (psycopg2.ProgrammingError) can't adapt type 'dict'
+[SQL: INSERT INTO products_purchased (prch_id, comp_id, prod_id) VALUES (%(prch_id)s, %(comp_id)s, %(prod_id)s)]
+[parameters: ({'prch_id': {'trns_id': 5}, 'comp_id': 6, 'prod_id': 1}, {'prch_id': {'trns_id': 5}, 'comp_id': 6, 'prod_id': 3}, {'prch_id': {'trns_id': 5}, 'comp_id': 6, 'prod_id': 4})]
+(Background on this error at: https://sqlalche.me/e/14/f405)
