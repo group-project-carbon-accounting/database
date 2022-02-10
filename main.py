@@ -4,7 +4,7 @@ import tornado.ioloop
 import tornado.web
 import sqlalchemy
 from handlers.ping import PingHandler
-from handlers.transaction_info import TransactionUpdateHandler, TransactionAddHandler
+from handlers.purchase_info import PurchaseUpdateHandler, PurchaseAddHandler
 from tornado.log import enable_pretty_logging
 
 
@@ -28,8 +28,8 @@ def make_app(config):
 
     return tornado.web.Application([
         (r'/ping', PingHandler),
-        (r'/transaction/update', TransactionUpdateHandler, dict(db=db)),
-        (r'/transaction/add', TransactionAddHandler, dict(db=db)),
+        (r'/purchase/update', PurchaseUpdateHandler, dict(db=db)),
+        (r'/purchase/add', PurchaseAddHandler, dict(db=db)),
     ],
         debug=config[mode].getboolean('debug')
     )

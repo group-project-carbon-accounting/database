@@ -3,7 +3,7 @@ import json
 import sqlalchemy
 
 
-class TransactionAddHandler(tornado.web.RequestHandler):
+class PurchaseAddHandler(tornado.web.RequestHandler):
     def initialize(self, db):
         self.db = db
 
@@ -45,7 +45,7 @@ class TransactionAddHandler(tornado.web.RequestHandler):
             self.write(json.dumps(result))
 
 
-class TransactionUpdateHandler(tornado.web.RequestHandler):
+class PurchaseUpdateHandler(tornado.web.RequestHandler):
     def initialize(self, db):
         self.db = db
 
