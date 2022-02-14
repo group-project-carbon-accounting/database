@@ -8,9 +8,8 @@ from handlers.purchase_info import PurchaseUpdateHandler, PurchaseAddHandler
 from tornado.log import enable_pretty_logging
 
 
-def make_app(config):
+def initialise_database(config):
     mode = config['MODE']['mode']
-
     engine = sqlalchemy.create_engine(
         config[mode]['database_url'], echo=True, future=True)
     metadata = sqlalchemy.MetaData()
@@ -24,8 +23,12 @@ def make_app(config):
         'purchase', metadata, autoload=True, autoload_with=engine)
     products_purchased = sqlalchemy.Table(
         'products_purchased', metadata, autoload=True, autoload_with=engine)
-    db=dict(engine=engine,metadata=metadata)
+    return dict(engine=engine,metadata=metadata)
 
+
+def make_app(config):
+    mode = config['MODE']['mode']
+    db = initialise_database(config)
     return tornado.web.Application([
         (r'/ping', PingHandler),
         (r'/purchase/update', PurchaseUpdateHandler, dict(db=db)),

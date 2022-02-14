@@ -24,3 +24,8 @@ sudo apt-get -y install postgresql```
 $ source venv/bin/activate
 $ python main.py
 ```
+
+## Test
+1. Create a ```testdb``` in postgres
+    - It will be automatically populated with test data in the fixtures folder
+2. Run ```python -m tornado.test.runtests discover```
