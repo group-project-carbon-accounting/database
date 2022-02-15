@@ -20,6 +20,27 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: "3.9"
+    - name: Setup Postgresql db
+      run: |
+        # Create the file repository configuration:
+        sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+        # Import the repository signing key:
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+        # Update the package lists:
+        sudo apt-get update
+
+        # Install the latest version of PostgreSQL.
+        sudo apt-get -y install postgresql-14
+        
+        # Change to postgresql
+        sudo -iu postgresql
+        
+        # Log in and create testdb
+        psql
+        create database testdb;
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
