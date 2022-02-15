@@ -34,8 +34,8 @@ jobs:
         # Install the latest version of PostgreSQL.
         sudo apt-get -y install postgresql-14
         
-        # Change to postgresql
-        sudo -iu postgresql
+        # Change to postgres
+        sudo -iu postgres
         
         # Log in and create testdb
         psql
