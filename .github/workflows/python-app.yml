@@ -34,12 +34,16 @@ jobs:
         # Install the latest version of PostgreSQL.
         sudo apt-get -y install postgresql-14
         
+        # Start the postgres service
+        sudo systemctl restart postgresql.service
+
         # Change to postgres
         sudo -iu postgres
         
         # Log in and create testdb
         psql
         create database testdb;
+        exit
 
     - name: Install dependencies
       run: |
