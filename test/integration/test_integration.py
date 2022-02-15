@@ -18,13 +18,17 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         self.config.read('config.ini')
         mode = 'TEST'
         self.config['MODE']['mode'] = mode
-        self.db = main.initialise_database(self.config)
 
+        engine = sqlalchemy.create_engine(
+            self.config[mode]['database_url'], echo=True, future=True)
         with open('test/integration/fixtures/initialise_postgresdb.sql') as f:
             stmt = sqlalchemy.text(''.join(f.readlines()))
 
-        with self.db['engine'].begin() as conn:
+        with engine.begin() as conn:
             conn.execute(stmt)
+
+        self.db = main.initialise_database(self.config)
+
 
     def get_app(self):
         return main.make_app(self.config)
@@ -59,7 +63,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         )
         self.assertEqual(response.code, 200)
         json_body = json.loads(response.body)
-        table_purchase = self.db['metadata'].tables['purchase']
+        table_purchase = self.db.metadata.tables['purchase']
         stmt = sqlalchemy\
             .select(
                 table_purchase.c.buyr_id,
@@ -69,7 +73,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             )\
             .select_from(table_purchase)\
             .where(table_purchase.c.id == json_body['data']['prch_id'])
-        with self.db['engine'].begin() as conn:
+        with self.db.engine.begin() as conn:
             for result in conn.execute(stmt):
                 self.assertEqual(result, expected_purchase)
         """
@@ -124,7 +128,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         self.assertEqual(response.code, 200)
         json_body = json.loads(response.body)
         prch_id = json_body['data']['prch_id']
-        table_purchase = self.db['metadata'].tables['purchase']
+        table_purchase = self.db.metadata.tables['purchase']
         stmt = sqlalchemy\
             .select(
                 table_purchase.c.buyr_id,
@@ -134,11 +138,11 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             )\
             .select_from(table_purchase)\
             .where(table_purchase.c.id == prch_id)
-        with self.db['engine'].begin() as conn:
+        with self.db.engine.begin() as conn:
             for result in conn.execute(stmt):
                 self.assertEqual(result, expected_purchase)
 
-        table_products_purchased = self.db['metadata'].tables['products_purchased']
+        table_products_purchased = self.db.metadata.tables['products_purchased']
         stmt2 = sqlalchemy\
             .select(
                 table_products_purchased.c.prod_id,
@@ -146,7 +150,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             )\
             .select_from(table_products_purchased)\
             .where(table_products_purchased.c.prch_id == prch_id)
-        with self.db['engine'].begin() as conn:
+        with self.db.engine.begin() as conn:
             result = conn.execute(stmt2)
             result = sorted(list(map(tuple, result)))
             self.assertEqual(expected_products_purchased, result)

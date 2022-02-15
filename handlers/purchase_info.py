@@ -7,14 +7,14 @@ class PurchaseAddHandler(tornado.web.RequestHandler):
     def initialize(self, db):
         self.db = db
 
-    def post(self):
+    async def post(self):
         data = json.loads(self.request.body)
         result = {
             'status': 'success',
             'data': None
         }
-        table_purchase = self.db['metadata'].tables['purchase']
-        table_products_purchased = self.db['metadata'].tables['products_purchased']
+        table_purchase = self.db.metadata.tables['purchase']
+        table_products_purchased = self.db.metadata.tables['products_purchased']
 
         stmt_purchase = sqlalchemy\
             .insert(table_purchase)\
@@ -25,7 +25,7 @@ class PurchaseAddHandler(tornado.web.RequestHandler):
                 carbon_cost=0
             )
 
-        with self.db['engine'].begin() as conn:
+        with self.db.engine.begin() as conn:
             cursor = conn.execute(stmt_purchase)
             prch_id = cursor.inserted_primary_key[0]
 

@@ -1,5 +1,6 @@
 import configparser
 import logging
+from types import SimpleNamespace
 import tornado.ioloop
 import tornado.web
 import sqlalchemy
@@ -23,7 +24,7 @@ def initialise_database(config):
         'purchase', metadata, autoload=True, autoload_with=engine)
     products_purchased = sqlalchemy.Table(
         'products_purchased', metadata, autoload=True, autoload_with=engine)
-    return dict(engine=engine,metadata=metadata)
+    return SimpleNamespace(engine=engine, metadata=metadata)
 
 
 def make_app(config):
