@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS purchase(
     selr_id INT NOT NULL,
     -- cents
     price INT NOT NULL,
-    carbon_cost INT NOT NULL,
+    carbon_cost INT,
     CONSTRAINT fk_buyr FOREIGN KEY(buyr_id) REFERENCES entity(id),
     CONSTRAINT fk_selr FOREIGN KEY(selr_id) REFERENCES entity(id)
 );

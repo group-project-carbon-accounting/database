@@ -4,25 +4,28 @@ from types import SimpleNamespace
 import tornado.ioloop
 import tornado.web
 import sqlalchemy
+from handlers.entity import EntityGetHandler
 from handlers.ping import PingHandler
-from handlers.purchase_info import PurchaseUpdateHandler, PurchaseAddHandler
+from handlers.product import ProductAddHandler, ProductGetHandler, ProductUpdateHandler
+from handlers.purchase import PurchaseGetHandler, PurchaseUpdateHandler, PurchaseAddHandler
 from tornado.log import enable_pretty_logging
 from sqlalchemy.ext.asyncio import create_async_engine
+
 
 def initialise_database(config):
     mode = config['MODE']['mode']
     engine = sqlalchemy.create_engine(
         config[mode]['database_url'], echo=True, future=True)
     metadata = sqlalchemy.MetaData()
-    entity = sqlalchemy.Table(
+    sqlalchemy.Table(
         'entity', metadata, autoload=True, autoload_with=engine)
-    product = sqlalchemy.Table(
+    sqlalchemy.Table(
         'product', metadata, autoload=True, autoload_with=engine)
-    company_product = sqlalchemy.Table(
+    sqlalchemy.Table(
         'company_product', metadata, autoload=True, autoload_with=engine)
-    purchase = sqlalchemy.Table(
+    sqlalchemy.Table(
         'purchase', metadata, autoload=True, autoload_with=engine)
-    products_purchased = sqlalchemy.Table(
+    sqlalchemy.Table(
         'products_purchased', metadata, autoload=True, autoload_with=engine)
     async_engine = create_async_engine(
         config[mode]['database_url_async'], echo=True, future=True)
@@ -32,10 +35,18 @@ def initialise_database(config):
 def make_app(config):
     mode = config['MODE']['mode']
     db = initialise_database(config)
+    d = dict(db=db)
+
     return tornado.web.Application([
         (r'/ping', PingHandler),
-        (r'/purchase/update', PurchaseUpdateHandler, dict(db=db)),
-        (r'/purchase/add', PurchaseAddHandler, dict(db=db)),
+        (r'/purchase/get/(?P<prch_id>[0-9]*)', PurchaseGetHandler, d),
+        (r'/purchase/add', PurchaseAddHandler, d),
+        (r'/purchase/update', PurchaseUpdateHandler, d),
+        (r'/product/get/(?P<comp_id>[0-9]*)/(?P<prod_id>[0-9]*)',
+         ProductGetHandler, d),
+        (r'/product/add', ProductAddHandler, d),
+        (r'/product/update', ProductUpdateHandler, d),
+        (r'/entity/get/(?P<user_id>[0-9]*)', EntityGetHandler, d)
     ],
         debug=config[mode].getboolean('debug')
     )
