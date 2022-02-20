@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 import main
 import tornado
 import configparser
@@ -19,6 +20,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         mode = 'TEST'
         self.config['MODE']['mode'] = mode
 
+        # initialise own connection to db to verify correctness of handlers
         engine = sqlalchemy.create_engine(
             self.config[mode]['database_url'], echo=True, future=True)
         with open('test/integration/fixtures/initialise_postgresdb.sql') as f:
@@ -27,7 +29,18 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         with engine.begin() as conn:
             conn.execute(stmt)
 
-        self.db = main.initialise_database(self.config)
+        metadata = sqlalchemy.MetaData()
+        entity = sqlalchemy.Table(
+            'entity', metadata, autoload=True, autoload_with=engine)
+        product = sqlalchemy.Table(
+            'product', metadata, autoload=True, autoload_with=engine)
+        company_product = sqlalchemy.Table(
+            'company_product', metadata, autoload=True, autoload_with=engine)
+        purchase = sqlalchemy.Table(
+            'purchase', metadata, autoload=True, autoload_with=engine)
+        products_purchased = sqlalchemy.Table(
+            'products_purchased', metadata, autoload=True, autoload_with=engine)
+        self.db = SimpleNamespace(engine=engine, metadata=metadata)
 
 
     def get_app(self):

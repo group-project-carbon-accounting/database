@@ -25,8 +25,9 @@ class PurchaseAddHandler(tornado.web.RequestHandler):
                 carbon_cost=0
             )
 
-        with self.db.engine.begin() as conn:
-            cursor = conn.execute(stmt_purchase)
+        # with self.db.engine.begin() as conn:
+        async with self.db.async_engine.begin() as conn:
+            cursor = await conn.execute(stmt_purchase)
             prch_id = cursor.inserted_primary_key[0]
 
             # if product info is provided, add them
@@ -36,7 +37,7 @@ class PurchaseAddHandler(tornado.web.RequestHandler):
                         prod_id=x['prod_id'], comp_id=x['comp_id'], prch_id=prch_id),
                     data['item_list']
                 ))
-                conn.execute(
+                await conn.execute(
                     sqlalchemy.insert(table_products_purchased),
                     item_list
                 )

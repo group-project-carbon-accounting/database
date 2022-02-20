@@ -7,7 +7,7 @@ import sqlalchemy
 from handlers.ping import PingHandler
 from handlers.purchase_info import PurchaseUpdateHandler, PurchaseAddHandler
 from tornado.log import enable_pretty_logging
-
+from sqlalchemy.ext.asyncio import create_async_engine
 
 def initialise_database(config):
     mode = config['MODE']['mode']
@@ -24,7 +24,9 @@ def initialise_database(config):
         'purchase', metadata, autoload=True, autoload_with=engine)
     products_purchased = sqlalchemy.Table(
         'products_purchased', metadata, autoload=True, autoload_with=engine)
-    return SimpleNamespace(engine=engine, metadata=metadata)
+    async_engine = create_async_engine(
+        config[mode]['database_url_async'], echo=True, future=True)
+    return SimpleNamespace(engine=engine, async_engine=async_engine, metadata=metadata)
 
 
 def make_app(config):
