@@ -1,6 +1,37 @@
 # Database
 ## Structure
-Coming soon!
+The database module is intended to be a thin wrapper around the postgresql database. Apart from accessing data, it implements 2 additional functions:
+- input sanitisation to protect the database from being modified wrongly
+- convenience methods that simplify database queries
+
+The database comprises 5 tables, namely:
+- entity
+    - (id, display_name, carbon_offset, carbon_cost)
+- product 
+    - (id, item_name, carbon_cost)
+- company_product
+    - (comp_id, prod_id, carbon_cost)
+- purchase
+    - (id, buyr_id, selr_id, price, carbon_cost)
+- products_purchased
+    - (prch_id, comp_id, prod_id)
+
+These are derived from the entity-relationship schema. 
+
+```entity``` represents end-users or companies, and ```product``` represents products and their carbon costs. 
+
+If we have more information about the carbon cost of a product sold by a company, then there is a relationship between ```entity``` and ```product```, and we store this carbon cost in ```company_product```. 
+
+A ```purchase``` is a relation between 2 ```entities```. An item in this relation can also involve multiple products that are purchased, each of which could have (company, product) information. We store this in ```products_purchased```.
+### Handlers
+There should be get, insert, update, and delete handlers for different tables. All of the endpoints are documented on https://alpha-carbon-accounting.postman.co/workspace/Team-Workspace~c9b93ac6-8b5f-4a56-8553-719220c1127a/example/19468275-25050b6f-33e6-48e9-8215-f3390bd0a785. 
+
+As a quick overview from the server's perspective, endpoints should be called to get information, calculations can be done in the server, and then a final call to update the database.
+
+- For example, to calculate a better carbon cost for a purchase, the server would query ```GET \purchase\get\prch_id``` to get the purchase details. 
+- The server might also want to query ```GET \product\get\prod_id``` if the purchase includes information about the products bought. 
+- In the last step, the server calculates a better carbon cost, and calls ```POST \purchase\update``` with the new carbon cost.
+
 ## Setup
 1. Install postgresql
     - can check the website https://www.postgresql.org/ for instructions
@@ -14,8 +45,8 @@ sudo apt-get -y install postgresql```
 2. Setup database
     - Create db with ```postgres=# create database db```
     - Connect to database with ```postgres=# \c db```
-    - Copy and paste the stuff from ```initialise_postgresdb.sql``` into terminal
-    - You can try out test queries with ```test_queries.sql```
+    - Copy and paste the stuff from ```test/integration/fixtures/initialise_postgresdb.sql``` into terminal
+    - You can try out test queries with ```setup/test_queries.sql```
 3. Install ```requirements.txt```
 
 <!-- need to ... libpq -->
