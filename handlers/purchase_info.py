@@ -2,11 +2,10 @@ import tornado.web
 import json
 import sqlalchemy
 
+from handlers.base import BaseHandler
 
-class PurchaseAddHandler(tornado.web.RequestHandler):
-    def initialize(self, db):
-        self.db = db
 
+class PurchaseAddHandler(BaseHandler):
     async def post(self):
         data = json.loads(self.request.body)
         result = {
@@ -25,7 +24,6 @@ class PurchaseAddHandler(tornado.web.RequestHandler):
                 carbon_cost=0
             )
 
-        # with self.db.engine.begin() as conn:
         async with self.db.async_engine.begin() as conn:
             cursor = await conn.execute(stmt_purchase)
             prch_id = cursor.inserted_primary_key[0]
@@ -43,7 +41,9 @@ class PurchaseAddHandler(tornado.web.RequestHandler):
                 )
 
             result['data'] = dict(prch_id=prch_id)
-            self.write(json.dumps(result))
+
+        await self.db.async_engine.dispose()
+        self.write(json.dumps(result))
 
 
 class PurchaseUpdateHandler(tornado.web.RequestHandler):

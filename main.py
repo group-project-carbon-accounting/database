@@ -1,13 +1,12 @@
 import configparser
 import logging
-from types import SimpleNamespace
 import tornado.ioloop
 import tornado.web
 import sqlalchemy
 from handlers.ping import PingHandler
 from handlers.purchase_info import PurchaseUpdateHandler, PurchaseAddHandler
 from tornado.log import enable_pretty_logging
-from sqlalchemy.ext.asyncio import create_async_engine
+
 
 def initialise_database(config):
     mode = config['MODE']['mode']
@@ -24,18 +23,18 @@ def initialise_database(config):
         'purchase', metadata, autoload=True, autoload_with=engine)
     products_purchased = sqlalchemy.Table(
         'products_purchased', metadata, autoload=True, autoload_with=engine)
-    async_engine = create_async_engine(
-        config[mode]['database_url_async'], echo=True, future=True)
-    return SimpleNamespace(engine=engine, async_engine=async_engine, metadata=metadata)
+    return config, metadata
 
 
 def make_app(config):
     mode = config['MODE']['mode']
-    db = initialise_database(config)
+    config, metadata = initialise_database(config)
     return tornado.web.Application([
         (r'/ping', PingHandler),
-        (r'/purchase/update', PurchaseUpdateHandler, dict(db=db)),
-        (r'/purchase/add', PurchaseAddHandler, dict(db=db)),
+        (r'/purchase/update', PurchaseUpdateHandler,
+         dict(config=config, metadata=metadata)),
+        (r'/purchase/add', PurchaseAddHandler,
+         dict(config=config, metadata=metadata)),
     ],
         debug=config[mode].getboolean('debug')
     )
