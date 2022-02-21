@@ -1,3 +1,4 @@
+import datetime
 import tornado.web
 import json
 import sqlalchemy
@@ -28,7 +29,8 @@ class PurchaseGetHandler(tornado.web.RequestHandler):
             result['item_list'] = []
             for row in cursor2:
                 result['item_list'].append(row._asdict())
-
+        
+        result['ts'] = datetime.datetime.timestamp(result['ts'])
         self.write(json.dumps(result))
 
 

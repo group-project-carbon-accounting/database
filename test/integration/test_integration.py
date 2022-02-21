@@ -81,6 +81,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         )
         self.assertEqual(response.code, 200)
         json_body = json.loads(response.body)
+        del json_body['ts']
         self.assertEqual(expected_result, json_body)
 
     def test_purchase_add_no_product_info(self):

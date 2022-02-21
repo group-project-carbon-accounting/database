@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS purchase(
     -- cents
     price INT NOT NULL,
     carbon_cost INT,
+    ts TIMESTAMP default current_timestamp,
     CONSTRAINT fk_buyr FOREIGN KEY(buyr_id) REFERENCES entity(id),
     CONSTRAINT fk_selr FOREIGN KEY(selr_id) REFERENCES entity(id)
 );
