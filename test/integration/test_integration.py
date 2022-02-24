@@ -194,6 +194,31 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             result = sorted(list(map(tuple, result)))
             self.assertEqual(expected_products_purchased, result)
 
+    def test_purchase_update_not_in_table(self):
+        """
+        test that purchase update fails when prch_id not in table
+        """
+        query = '''
+        {
+            "prch_id": 11,
+            "buyr_id": 4,
+            "selr_id": 6,
+            "price": 123,
+            "carbon_cost": null,
+            "item_list": null
+        } 
+        '''
+        # buyr_id, self_id, price, carbon_cost
+        expected_purchase = (4, 6, 123, None)
+        expected_products_purchased = []
+
+        response = self.fetch(
+            path='/purchase/update',
+            method='POST',
+            body=query
+        )
+        self.assertEqual(response.code, 500)
+
     def test_purchase_update_no_product_info(self):
         """
         tests if purchase table is modified correctly,
@@ -455,7 +480,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             "carbon_offset": 0,
             "carbon_cost": 0
         }
-        ''') 
+        ''')
         response = self.fetch(
             path='/entity/get/1',
             method='GET'
