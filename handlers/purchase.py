@@ -29,7 +29,7 @@ class PurchaseGetHandler(tornado.web.RequestHandler):
             result['item_list'] = []
             for row in cursor2:
                 result['item_list'].append(row._asdict())
-        
+
         result['ts'] = datetime.datetime.timestamp(result['ts'])
         self.write(json.dumps(result))
 
@@ -57,7 +57,7 @@ class PurchaseAddHandler(tornado.web.RequestHandler):
                 buyr_id=data['buyr_id'],
                 selr_id=data['selr_id'],
                 price=data['price'],
-                carbon_cost=data['carbon_cost']
+                carbon_cost=0
             )
 
         async with self.db.async_engine.begin() as conn:
@@ -98,6 +98,11 @@ class PurchaseUpdateHandler(tornado.web.RequestHandler):
         table_purchase = self.db.metadata.tables['purchase']
         table_products_purchased = self.db.metadata.tables['products_purchased']
 
+        # check prch_id in purchase table
+        stmt_check = sqlalchemy\
+            .select(table_purchase)\
+            .where(table_purchase.c.id == prch_id)
+
         # updates purchase table
         stmt_purchase = sqlalchemy\
             .update(table_purchase)\
@@ -115,6 +120,10 @@ class PurchaseUpdateHandler(tornado.web.RequestHandler):
             .where(table_products_purchased.c.prch_id == prch_id)
 
         async with self.db.async_engine.begin() as conn:
+            has_row = False
+            for _ in await conn.execute(stmt_check):
+                has_row = True
+            assert(has_row)
             await conn.execute(stmt_purchase)
             await conn.execute(stmt_products_purchased_1)
 
