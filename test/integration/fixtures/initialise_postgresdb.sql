@@ -63,7 +63,8 @@ VALUES
     ('Bangreat', 0, 4),
     ('Uniglo', 0, 5),
     ('Samsong', 0, 10),
-    ('Lenova', 0, 10);
+    ('Lenova', 0, 10),
+    ('OffsetPlaceholderCompany', 0, 0);
 
 INSERT INTO
     product(item_name, carbon_cost)
