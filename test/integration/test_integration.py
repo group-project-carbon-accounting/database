@@ -93,11 +93,12 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             "buyr_id": 4,
             "selr_id": 6,
             "price": 123,
+            "carbon_cost": 345,
             "item_list": null
         }
         '''
         # buyr_id, self_id, price, carbon_cost
-        expected_purchase = (4, 6, 123, 0)
+        expected_purchase = (4, 6, 123, 345)
 
         response = self.fetch(
             path='/purchase/add',
@@ -132,6 +133,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             "buyr_id": 4,
             "selr_id": 6,
             "price": 123,
+            "carbon_cost": 234,
             "item_list": [
                 {
                     "prod_id": 1,
@@ -149,7 +151,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         }
         '''
         # buyr_id, self_id, price, carbon_cost
-        expected_purchase = (4, 6, 123, 0)
+        expected_purchase = (4, 6, 123, 234)
         # prod_id, comp_id
         expected_products_purchased = [
             (1, None),

@@ -57,7 +57,7 @@ class PurchaseAddHandler(tornado.web.RequestHandler):
                 buyr_id=data['buyr_id'],
                 selr_id=data['selr_id'],
                 price=data['price'],
-                carbon_cost=0
+                carbon_cost=data['carbon_cost']
             )
 
         async with self.db.async_engine.begin() as conn:
