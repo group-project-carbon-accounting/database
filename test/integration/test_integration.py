@@ -194,7 +194,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             result = sorted(list(map(tuple, result)))
             self.assertEqual(expected_products_purchased, result)
 
-    def test_purchase_update_not_in_table(self):
+    def test_purchase_update_missing(self):
         """
         test that purchase update fails when prch_id not in table
         """
@@ -208,9 +208,6 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             "item_list": null
         } 
         '''
-        # buyr_id, self_id, price, carbon_cost
-        expected_purchase = (4, 6, 123, None)
-        expected_products_purchased = []
 
         response = self.fetch(
             path='/purchase/update',
@@ -488,3 +485,82 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         self.assertEqual(response.code, 200)
         json_body = json.loads(response.body)
         self.assertEqual(expected, json_body)
+
+    def test_entity_purchases_get(self):
+        expected = json.loads('''
+        {
+            "user_id": 2,
+            "purchase_list": [
+                {
+                    "id": 2,
+                    "buyr_id": 2,
+                    "selr_id": 8,
+                    "price": 200000,
+                    "carbon_cost": 0
+                }
+            ]
+        }
+        ''')
+
+        response = self.fetch(
+            path='/entity/purchases/get/2?start_ts=145435764&end_ts=2645435774',
+            method='GET'
+        )
+        self.assertEqual(response.code, 200)
+        json_body = json.loads(response.body)
+        for purchase in json_body['purchase_list']:
+            purchase.pop('ts')
+        self.assertEqual(expected, json_body)
+
+    def test_entity_update_missing(self):
+        """
+        test update fails when entity id not in table
+        """
+        query = '''
+        {
+            "id": 69,
+            "carbon_offset": 10,
+            "carbon_cost": 10
+        }
+        '''
+
+        response = self.fetch(
+            path='/entity/update',
+            method='POST',
+            body=query
+        )
+
+        self.assertEqual(response.code, 500)
+
+    def test_entity_update_normal(self):
+        """
+        test that entity updates correctly
+        """
+        query = '''
+        {
+            "id": 1,
+            "carbon_offset": 10,
+            "carbon_cost": 10
+        }
+        '''
+        # id, display_name, carbon_offset, carbon_cost
+        expected_result = (1, 'Albert', 10, 10)
+
+        response = self.fetch(
+            path='/entity/update',
+            method='POST',
+            body=query
+        )
+
+        self.assertEqual(response.code, 200)
+        json_body = json.loads(response.body)
+        id = json_body['data']['id']
+
+        t_entity = self.db.metadata.tables['entity']
+        stmt = sqlalchemy\
+            .select(t_entity)\
+            .where(t_entity.c.id == id)
+
+        with self.db.engine.begin() as conn:
+            for row in conn.execute(stmt):
+                self.assertEqual(expected_result, row)

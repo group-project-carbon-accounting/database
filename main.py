@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import tornado.ioloop
 import tornado.web
 import sqlalchemy
-from handlers.entity import EntityGetHandler
+from handlers.entity import EntityGetHandler, EntityPurchasesGetHandler, EntityUpdateHandler
 from handlers.ping import PingHandler
 from handlers.product import ProductAddHandler, ProductGetHandler, ProductUpdateHandler
 from handlers.purchase import PurchaseGetHandler, PurchaseUpdateHandler, PurchaseAddHandler
@@ -46,7 +46,9 @@ def make_app(config):
          ProductGetHandler, d),
         (r'/product/add', ProductAddHandler, d),
         (r'/product/update', ProductUpdateHandler, d),
-        (r'/entity/get/(?P<user_id>[0-9]*)', EntityGetHandler, d)
+        (r'/entity/get/(?P<user_id>[0-9]*)', EntityGetHandler, d),
+        (r'/entity/update', EntityUpdateHandler, d),
+        (r'/entity/purchases/get/(?P<user_id>[0-9]*)', EntityPurchasesGetHandler, d)
     ],
         debug=config[mode].getboolean('debug')
     )
