@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 import main
-import tornado
+import tornado.testing
+import tornado.ioloop
 import configparser
 import sqlalchemy
 import json
@@ -22,7 +23,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
 
         # initialise own connection to db to verify correctness of handlers
         engine = sqlalchemy.create_engine(
-            self.config[mode]['database_url'], echo=True, future=True)
+            self.config[mode]['database_url'], echo=False, future=True)
         with open('test/integration/fixtures/initialise_postgresdb.sql') as f:
             stmt = sqlalchemy.text(''.join(f.readlines()))
 
@@ -42,8 +43,17 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             'products_purchased', metadata, autoload=True, autoload_with=engine)
         self.db = SimpleNamespace(engine=engine, metadata=metadata)
 
+    def tearDown(self) -> None:
+        """
+        close the async postgres connection
+        """
+        self.io_loop.run_sync(self.app_db.async_engine.dispose)
+        return super().tearDown()
+
     def get_app(self):
-        return main.make_app(self.config)
+        app, db = main.make_app(self.config)
+        self.app_db = db
+        return app
 
     def test_ping(self):
         """
@@ -214,7 +224,9 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             method='POST',
             body=query
         )
-        self.assertEqual(response.code, 500)
+        self.assertEqual(response.code, 200)
+        json_body = json.loads(response.body)
+        self.assertEqual(json_body['status'], 'fail')
 
     def test_purchase_update_no_product_info(self):
         """
@@ -530,7 +542,9 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             body=query
         )
 
-        self.assertEqual(response.code, 500)
+        self.assertEqual(response.code, 200)
+        json_body = json.loads(response.body)
+        self.assertEqual(json_body['status'], 'fail')
 
     def test_entity_update_normal(self):
         """

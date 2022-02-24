@@ -123,7 +123,10 @@ class PurchaseUpdateHandler(tornado.web.RequestHandler):
             has_row = False
             for _ in await conn.execute(stmt_check):
                 has_row = True
-            assert(has_row)
+            if not has_row:
+                result['status'] = 'fail'
+                self.write(json.dumps(result))
+                return
             await conn.execute(stmt_purchase)
             await conn.execute(stmt_products_purchased_1)
 

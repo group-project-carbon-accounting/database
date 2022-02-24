@@ -61,4 +61,4 @@ $ python main.py
 ## Test
 1. Create a ```testdb``` in postgres
     - It will be automatically populated with test data in the fixtures folder
-2. Run ```python -m tornado.test.runtests discover```
+2. Run ```python -m test```

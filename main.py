@@ -14,8 +14,9 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 def initialise_database(config):
     mode = config['MODE']['mode']
+    debug=config[mode].getboolean('debug')
     engine = sqlalchemy.create_engine(
-        config[mode]['database_url'], echo=True, future=True)
+        config[mode]['database_url'], echo=debug, future=True)
     metadata = sqlalchemy.MetaData()
     sqlalchemy.Table(
         'entity', metadata, autoload=True, autoload_with=engine)
@@ -28,7 +29,7 @@ def initialise_database(config):
     sqlalchemy.Table(
         'products_purchased', metadata, autoload=True, autoload_with=engine)
     async_engine = create_async_engine(
-        config[mode]['database_url_async'], echo=True, future=True)
+        config[mode]['database_url_async'], echo=debug, future=True)
     return SimpleNamespace(engine=engine, async_engine=async_engine, metadata=metadata)
 
 
@@ -51,18 +52,18 @@ def make_app(config):
         (r'/entity/purchases/get/(?P<user_id>[0-9]*)', EntityPurchasesGetHandler, d)
     ],
         debug=config[mode].getboolean('debug')
-    )
+    ), db
 
 
 if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('config.ini')
-
+    
     logger = logging.getLogger('tornado.application')
     enable_pretty_logging()
     logger.addHandler(logging.StreamHandler())
     logger.addHandler(logging.FileHandler('database.log'))
 
-    app = make_app(config)
+    app, _ = make_app(config)
     app.listen(8888)
     tornado.ioloop.IOLoop.current().start()
