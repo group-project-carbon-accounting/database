@@ -2,6 +2,7 @@
 ## Structure
 The database module is intended to be a thin wrapper around the postgresql database. Apart from accessing data, it implements 2 additional functions:
 - input sanitisation to protect the database from being modified wrongly
+    - not implemented due to time constraint
 - convenience methods that simplify database queries
 
 The database comprises 5 tables, namely:
