@@ -64,7 +64,12 @@ VALUES
     ('Uniglo', 0, 5),
     ('Samsong', 0, 10),
     ('Lenova', 0, 10),
-    ('OffsetPlaceholderCompany', 0, 0);
+    -- offsetting companies
+    ('Generic Offset', 0, 0),
+    ('Kiwi Carbon Capture Scheme', 0, 0),
+    ('Kakapo Tree Planting', 0, 0),
+    ('Kea Green Energy', 0, 0),
+    ('Takahe Methane Combustion', 0, 0);
 
 INSERT INTO
     product(item_name, carbon_cost)
@@ -82,7 +87,9 @@ VALUES
     -- clothing
     ('tshirt', 1300),
     ('dress', 500),
-    ('suit', 5000);
+    ('suit', 5000),
+    -- offsets
+    ('offset', 0);
 
 INSERT INTO
     company_product(comp_id, prod_id, carbon_cost)
@@ -96,7 +103,13 @@ VALUES
     -- samsong smartphone
     (11, 7, 60000),
     -- uniglo dress
-    (10, 10, 400);
+    (10, 10, 400),
+    -- offsets (carbon_cost is actually the monetary cost per unit)
+    (13, 12, 100),
+    (14, 12, 314),
+    (15, 12, 159),
+    (16, 12, 265),
+    (17, 12, 358);
 
 INSERT INTO
     purchase(buyr_id, selr_id, price, carbon_cost)
