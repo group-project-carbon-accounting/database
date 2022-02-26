@@ -16,11 +16,14 @@ class EntityGetHandler(tornado.web.RequestHandler):
             .select(t_entity)\
             .where(t_entity.c.id == user_id)
 
+        result = None
         async with self.db.async_engine.begin() as conn:
             cursor = await conn.execute(stmt)
             for row in cursor:
                 result = row._asdict()
-
+        if result is None:
+            raise tornado.web.HTTPError(
+                status_code=400, reason='entity id not in database')
         self.write(json.dumps(result))
 
 
@@ -56,9 +59,8 @@ class EntityUpdateHandler(tornado.web.RequestHandler):
             for _ in await conn.execute(stmt_check):
                 has_row = True
             if not has_row:
-                result['status'] = 'fail'
-                self.write(json.dumps(result))
-                return
+                raise tornado.web.HTTPError(
+                    status_code=400, reason='entity id not in database')
             await conn.execute(stmt_update)
 
         result['data'] = dict(id=id)

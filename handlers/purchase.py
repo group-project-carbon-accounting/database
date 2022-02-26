@@ -1,4 +1,5 @@
 import datetime
+from re import S
 import tornado.web
 import json
 import sqlalchemy
@@ -21,15 +22,20 @@ class PurchaseGetHandler(tornado.web.RequestHandler):
         stmt_products_purchased = sqlalchemy\
             .select(t_products_purchased)\
             .where(t_products_purchased.c.prch_id == prch_id)
+        result = None
         async with self.db.async_engine.begin() as conn:
             cursor = await conn.execute(stmt_purchase)
             for row in cursor:
                 result = row._asdict()
+
+            if result is None:
+                raise tornado.web.HTTPError(
+                    status_code=400, reason='purchase id not in database')
+
             cursor2 = await conn.execute(stmt_products_purchased)
             result['item_list'] = []
             for row in cursor2:
                 result['item_list'].append(row._asdict())
-
         result['ts'] = datetime.datetime.timestamp(result['ts'])
         self.write(json.dumps(result))
 
@@ -124,9 +130,8 @@ class PurchaseUpdateHandler(tornado.web.RequestHandler):
             for _ in await conn.execute(stmt_check):
                 has_row = True
             if not has_row:
-                result['status'] = 'fail'
-                self.write(json.dumps(result))
-                return
+                raise tornado.web.HTTPError(
+                    status_code=400, reason='purchase id not in database')
             await conn.execute(stmt_purchase)
             await conn.execute(stmt_products_purchased_1)
 

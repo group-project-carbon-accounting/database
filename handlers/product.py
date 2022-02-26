@@ -1,3 +1,4 @@
+from re import S
 import tornado.web
 import json
 import sqlalchemy
@@ -16,8 +17,6 @@ class ProductCompanyGetHandler(tornado.web.RequestHandler):
             prod_id: 2,
             carbon_cost: 3
         }
-        If entry is present in company_products table, everything is not null.
-        If entry not present, search product table, and comp_id becomes null.
         """
         t_product = self.db.metadata.tables['product']
         t_company_product = self.db.metadata.tables['company_product']
@@ -27,24 +26,15 @@ class ProductCompanyGetHandler(tornado.web.RequestHandler):
                 t_company_product.c.comp_id == comp_id,
                 t_company_product.c.prod_id == prod_id
             )
-        stmt2 = sqlalchemy\
-            .select(
-                t_product.c.id.label('prod_id'),
-                t_product.c.carbon_cost
-            )\
-            .where(t_product.c.id == prod_id)
 
         result = None
         async with self.db.async_engine.begin() as conn:
             cursor = await conn.execute(stmt)
             for row in cursor:
                 result = row._asdict()
-            if result is None:
-                cursor2 = await conn.execute(stmt2)
-                for row in cursor2:
-                    result = row._asdict()
-                result['comp_id'] = None
-
+        if result is None:
+            raise tornado.web.HTTPError(
+                status_code=400, reason='comp_id, prod_id not in database')
         self.write(json.dumps(result))
 
 

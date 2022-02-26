@@ -63,7 +63,14 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         self.assertEqual(response.code, 200)
         self.assertEqual(response.body, b'pong!')
 
-    def test_purchase_get(self):
+    def test_purchase_get_missing(self):
+        response = self.fetch(
+            path='/purchase/get/100',
+            method='GET'
+        )
+        self.assertEqual(response.code, 400)
+
+    def test_purchase_get_normal(self):
         expected_result = json.loads('''
         {
             "id": 1,
@@ -224,9 +231,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             method='POST',
             body=query
         )
-        self.assertEqual(response.code, 200)
-        json_body = json.loads(response.body)
-        self.assertEqual(json_body['status'], 'fail')
+        self.assertEqual(response.code, 400)
 
     def test_purchase_update_no_product_info(self):
         """
@@ -351,7 +356,30 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             result = sorted(list(map(tuple, result)))
             self.assertEqual(expected_products_purchased, result)
 
-    def test_product_get_not_in_prod(self):
+    def test_product_comp_get_missing(self):
+        response = self.fetch(
+            path='/product/get/7/1',
+            method='GET'
+        )
+        self.assertEqual(response.code, 400)
+
+    def test_product_comp_normal(self):
+        expected_result = json.loads('''
+        {
+            "prod_id": 1,
+            "carbon_cost": 2300,
+            "comp_id": 6
+        }        
+        ''')
+        response = self.fetch(
+            path='/product/get/6/1',
+            method='GET'
+        )
+        self.assertEqual(response.code, 200)
+        json_body = json.loads(response.body)
+        self.assertEqual(expected_result, json_body)
+
+    def test_product_get_missing(self):
         """
         test that get product fails when not in table
         """
@@ -378,38 +406,6 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
         )
         json_body = json.loads(response.body)
         self.assertEqual(json_body, expected)
-
-    def test_product_get_not_in_comp_prod(self):
-        expected_result = json.loads('''
-        {
-            "prod_id": 1,
-            "carbon_cost": 3300,
-            "comp_id": null
-        }        
-        ''')
-        response = self.fetch(
-            path='/product/get/7/1',
-            method='GET'
-        )
-        self.assertEqual(response.code, 200)
-        json_body = json.loads(response.body)
-        self.assertEqual(expected_result, json_body)
-
-    def test_product_get_in_comp_prod(self):
-        expected_result = json.loads('''
-        {
-            "prod_id": 1,
-            "carbon_cost": 2300,
-            "comp_id": 6
-        }        
-        ''')
-        response = self.fetch(
-            path='/product/get/6/1',
-            method='GET'
-        )
-        self.assertEqual(response.code, 200)
-        json_body = json.loads(response.body)
-        self.assertEqual(expected_result, json_body)
 
     def test_product_add(self):
         query = '''
@@ -451,7 +447,6 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             body=query
         )
         self.assertEqual(response.code, 200)
-        json_body = json.loads(response.body)
         t_entity = self.db.metadata.tables['entity']
         stmt = sqlalchemy\
             .select(t_entity)\
@@ -509,7 +504,14 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             result = conn.execute(stmt)
             self.assertIn(expected_company_product, result)
 
-    def test_entity_get(self):
+    def test_entity_get_missing(self):
+        response = self.fetch(
+            path='/entity/get/100',
+            method='GET'
+        )
+        self.assertEqual(response.code, 400)
+
+    def test_entity_get_normal(self):
         expected = json.loads('''
         {
             "id": 1,
@@ -570,9 +572,7 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             body=query
         )
 
-        self.assertEqual(response.code, 200)
-        json_body = json.loads(response.body)
-        self.assertEqual(json_body['status'], 'fail')
+        self.assertEqual(response.code, 400)
 
     def test_entity_update_normal(self):
         """
