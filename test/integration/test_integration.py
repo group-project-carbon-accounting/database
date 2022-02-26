@@ -351,6 +351,34 @@ class TestApp(tornado.testing.AsyncHTTPTestCase):
             result = sorted(list(map(tuple, result)))
             self.assertEqual(expected_products_purchased, result)
 
+    def test_product_get_not_in_prod(self):
+        """
+        test that get product fails when not in table
+        """
+        response = self.fetch(
+            path='/product/get/100',
+            method='GET'
+        )
+        self.assertEqual(response.code, 400)
+
+    def test_product_get_normal(self):
+        """
+        test that get product works 
+        """
+        expected = json.loads('''
+        {
+            "id": 1,
+            "item_name": "beef",
+            "carbon_cost": 3300
+        } 
+        ''')
+        response = self.fetch(
+            path='/product/get/1',
+            method='GET'
+        )
+        json_body = json.loads(response.body)
+        self.assertEqual(json_body, expected)
+
     def test_product_get_not_in_comp_prod(self):
         expected_result = json.loads('''
         {

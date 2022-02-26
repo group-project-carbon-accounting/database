@@ -3,7 +3,7 @@ import json
 import sqlalchemy
 
 
-class ProductGetHandler(tornado.web.RequestHandler):
+class ProductCompanyGetHandler(tornado.web.RequestHandler):
     def initialize(self, db):
         self.db = db
 
@@ -45,6 +45,26 @@ class ProductGetHandler(tornado.web.RequestHandler):
                     result = row._asdict()
                 result['comp_id'] = None
 
+        self.write(json.dumps(result))
+
+
+class ProductGetHandler(tornado.web.RequestHandler):
+    def initialize(self, db):
+        self.db = db
+
+    async def get(self, prod_id):
+        prod_id = int(prod_id)
+        t_product = self.db.metadata.tables['product']
+        stmt = sqlalchemy\
+            .select(t_product)\
+            .where(t_product.c.id == prod_id)
+        result = None
+        async with self.db.async_engine.begin() as conn:
+            for row in await conn.execute(stmt):
+                result = row._asdict()
+        if result is None:
+            raise tornado.web.HTTPError(
+                status_code=400, reason='product id not in database')
         self.write(json.dumps(result))
 
 

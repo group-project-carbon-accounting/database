@@ -6,7 +6,7 @@ import tornado.web
 import sqlalchemy
 from handlers.entity import EntityGetHandler, EntityPurchasesGetHandler, EntityUpdateHandler
 from handlers.ping import PingHandler
-from handlers.product import ProductAddHandler, ProductGetHandler, ProductUpdateHandler
+from handlers.product import ProductAddHandler, ProductCompanyGetHandler, ProductGetHandler, ProductUpdateHandler
 from handlers.purchase import PurchaseGetHandler, PurchaseUpdateHandler, PurchaseAddHandler
 from tornado.log import enable_pretty_logging
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -44,7 +44,8 @@ def make_app(config):
         (r'/purchase/add', PurchaseAddHandler, d),
         (r'/purchase/update', PurchaseUpdateHandler, d),
         (r'/product/get/(?P<comp_id>[0-9]*)/(?P<prod_id>[0-9]*)',
-         ProductGetHandler, d),
+         ProductCompanyGetHandler, d),
+         (r'/product/get/(?P<prod_id>[0-9]*)', ProductGetHandler, d),
         (r'/product/add', ProductAddHandler, d),
         (r'/product/update', ProductUpdateHandler, d),
         (r'/entity/get/(?P<user_id>[0-9]*)', EntityGetHandler, d),
