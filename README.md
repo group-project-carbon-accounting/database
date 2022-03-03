@@ -25,7 +25,7 @@ If we have more information about the carbon cost of a product sold by a company
 
 A ```purchase``` is a relation between 2 ```entities```. An item in this relation can also involve multiple products that are purchased, each of which could have (company, product) information. We store this in ```products_purchased```.
 ### Handlers
-There should be get, insert, update, and delete handlers for different tables. All of the endpoints are documented on https://alpha-carbon-accounting.postman.co/workspace/Team-Workspace~c9b93ac6-8b5f-4a56-8553-719220c1127a/example/19468275-25050b6f-33e6-48e9-8215-f3390bd0a785. 
+There should be get, insert, update, and delete handlers for different tables. All of the endpoints are documented on https://documenter.getpostman.com/view/19468275/UVktptPf#46caaa71-8274-4595-9c41-27bc2327a7ff. 
 
 As a quick overview from the server's perspective, endpoints should be called to get information, calculations can be done in the server, and then a final call to update the database.
 
