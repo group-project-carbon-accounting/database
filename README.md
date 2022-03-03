@@ -54,11 +54,20 @@ sudo apt-get -y install postgresql```
 
 ## Run
 ```
-$ source venv/bin/activate
 $ python main.py
 ```
 
 ## Test
+A suite of integration tests were written to test the correctness of the database wrapper endpoints. In general, each table in the database has get, insert, and update endpoints, so the tests follow the following pattern:
+- get
+    - valid row id returns the contents of that row
+    - invalid row id returns a HTTP response with a 4xx error code
+- insert
+    - valid row input updates the database table correctly
+- update
+    - valid row id updates the contents of that row
+    - invalid row id returns a HTTP response with a 4xx error code
+### Instructions for Running
 1. Create a ```testdb``` in postgres
     - It will be automatically populated with test data in the fixtures folder
 2. Run ```python -m test```
